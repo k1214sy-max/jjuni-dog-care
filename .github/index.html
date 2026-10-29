@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>우리 강아지 관리</title>
+<style>
+body {
+  font-family: sans-serif;
+  background: #fff8ef;
+  text-align: center;
+  padding: 20px;
+}
+h1 { color: #8b5e3c; }
+.box {
+  background: white;
+  padding: 15px;
+  margin: 12px 0;
+  border-radius: 15px;
+}
+button {
+  background: #ffb36b;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  margin: 5px;
+  font-size: 16px;
+}
+</style>
+</head>
+<body>
+<h1>🐶 우리 강아지 관리</h1>
+<div class="box">
+  <h2>🐾 우리 강아지</h2>
+  <input id="dog" placeholder="강아지 이름">
+  <button onclick="saveDog()">이름 저장</button>
+  <p id="name">이름을 입력해 주세요.</p>
+</div>
+<div class="box">
+  <h3>🍚 밥 먹기</h3>
+  <button onclick="check('밥 먹기')">밥 먹었어요</button>
+  <h3>🚶 산책하기</h3>
+  <button onclick="check('산책하기')">산책했어요</button>
+  <h3>💊 건강 관리</h3>
+  <button onclick="check('약 먹기')">약 먹었어요</button>
+</div>
+<div class="box">
+  <h3>📋 오늘의 기록</h3>
+  <ul id="records"></ul>
+</div>
+<script>
+function saveDog() {
+  const dog = document.getElementById('dog').value;
+  if (dog) {
+    document.getElementById('name').innerText =
+      '우리 집 강아지: ' + dog;
+    localStorage.setItem('dogName', dog);
+  }
+}
+function check(task) {
+  const time = new Date().toLocaleTimeString('ko-KR');
+  const li = document.createElement('li');
+  li.innerText = time + ' - ' + task;
+  document.getElementById('records').appendChild(li);
+}
+const saved = localStorage.getItem('dogName');
+if (saved) {
+  document.getElementById('dog').value = saved;
+  document.getElementById('name').innerText =
+    '우리 집 강아지: ' + saved;
+}
+</script>
+</body>
+</html>
