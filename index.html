@@ -1,46 +1,148 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>쭌이 강아지 관리</title>
+<title>쭈니 강아지 관리</title>
 <style>
-body {
-  font-family: sans-serif;
-  background: #fff8ef;
-  text-align: center;
-  padding: 20px;
-  color: #594538;
+*{box-sizing:border-box}
+body{
+  font-family:sans-serif;
+  background:#fff8ef;
+  color:#594538;
+  text-align:center;
+  padding:18px;
+  margin:0;
 }
-h1 { color: #e58b55; }
-.box {
-  background: white;
-  padding: 18px;
-  margin: 15px 0;
-  border-radius: 15px;
+h1{color:#e58b55}
+h2{color:#bd7950}
+.card{
+  background:white;
+  border-radius:16px;
+  padding:16px;
+  margin:14px 0;
+  box-shadow:0 2px 8px #00000012;
 }
-button {
-  background: #f1b58c;
-  border: none;
-  padding: 12px;
-  border-radius: 10px;
-  font-size: 16px;
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  margin:7px 0;
+  border:1px solid #ddd;
+  border-radius:9px;
+  font-size:16px;
 }
+button{
+  background:#e58b55;
+  color:white;
+  border:0;
+  padding:12px 18px;
+  border-radius:10px;
+  font-size:16px;
+  margin:5px;
+}
+.record{
+  background:#fff4e8;
+  padding:12px;
+  border-radius:10px;
+  margin:8px 0;
+  text-align:left;
+}
+.small{font-size:13px;color:#999}
 </style>
 </head>
 <body>
-<h1>🐶 쭌이 건강 관리</h1>
-<div class="box">
-  <h3>🍚 밥 먹기</h3>
-  <button onclick="alert('밥 먹기를 기록했어요!')">식사 기록</button>
+
+<h1>🐶 쭈니의 행복한 하루</h1>
+<p>사랑하는 쭈니 건강 관리</p>
+
+<div class="card">
+  <h2>🐾 쭈니 프로필</h2>
+  <p style="font-size:55px">🐕</p>
+  <p><b>이름 : 쭈니</b></p>
+  <p>우리 가족의 소중한 친구 ❤️</p>
 </div>
-<div class="box">
-  <h3>🚶 산책</h3>
-  <button onclick="alert('산책을 기록했어요!')">산책 기록</button>
+
+<div class="card">
+  <h2>📝 오늘의 관리 기록</h2>
+  <input type="date" id="date">
+  <select id="kind">
+    <option>🍚 식사</option>
+    <option>🚶 산책</option>
+    <option>💊 약 / 예방접종</option>
+    <option>🛁 목욕 / 미용</option>
+    <option>❤️ 건강 상태</option>
+  </select>
+  <textarea id="memo" rows="3"
+  placeholder="쭈니의 오늘 기록을 적어주세요"></textarea>
+  <button onclick="addRecord()">기록 저장하기</button>
 </div>
-<div class="box">
-  <h3>💊 건강 관리</h3>
-  <button onclick="alert('건강 기록을 확인해 주세요!')">건강 기록</button>
+
+<div class="card">
+  <h2>📅 쭈니의 관리 일지</h2>
+  <div id="records">아직 기록이 없습니다.</div>
+  <button onclick="clearRecords()">전체 기록 삭제</button>
 </div>
+
+<p class="small">쭈니를 사랑하는 마음으로 ❤️</p>
+
+<script>
+document.getElementById("date").value =
+new Date().toISOString().slice(0,10);
+
+let records=JSON.parse(
+localStorage.getItem("jjuniRecords")||"[]"
+);
+
+function showRecords(){
+  let box=document.getElementById("records");
+  if(records.length===0){
+    box.innerHTML="아직 기록이 없습니다.";
+    return;
+  }
+  box.innerHTML="";
+  records.slice().reverse().forEach((r,i)=>{
+    let div=document.createElement("div");
+    div.className="record";
+    let title=document.createElement("b");
+    title.textContent=r.kind;
+    let date=document.createElement("div");
+    date.textContent=r.date;
+    let memo=document.createElement("p");
+    memo.textContent=r.memo;
+    div.append(title,date,memo);
+    box.appendChild(div);
+  });
+}
+
+function addRecord(){
+  let date=document.getElementById("date").value;
+  let kind=document.getElementById("kind").value;
+  let memo=document.getElementById("memo").value.trim();
+  if(!date||!memo){
+    alert("날짜와 내용을 입력해주세요.");
+    return;
+  }
+  records.push({date,kind,memo});
+  localStorage.setItem(
+    "jjuniRecords",JSON.stringify(records)
+  );
+  document.getElementById("memo").value="";
+  showRecords();
+  alert("쭈니의 기록이 저장되었습니다! ❤️");
+}
+
+function clearRecords(){
+  if(confirm("모든 기록을 삭제할까요?")){
+    records=[];
+    localStorage.setItem(
+      "jjuniRecords",JSON.stringify(records)
+    );
+    showRecords();
+  }
+}
+
+showRecords();
+</script>
 </body>
 </html>
